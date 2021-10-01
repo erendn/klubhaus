@@ -1,4 +1,3 @@
-import sys
 import socket
 from time import sleep
 from threading import Thread
@@ -8,17 +7,17 @@ from .utils import *
 class connection:
     """ Peer-to-peer connection class. """
 
-    def __init__(self, username, is_host=False, connect_limit=2):
+    def __init__(self, username, port=0, is_host=False, connect_limit=2):
 
         self.username = username
 
         # Create a socket for connections
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if is_host:
-            self.sock.bind((HOST, int(sys.argv[2])))
+            self.sock.bind((HOST, port))
             self.sock.listen(BACKLOG)
         else:
-            self.sock.connect((HOST, int(sys.argv[2])))
+            self.sock.connect((HOST, port))
         # Set the socket non-blocking to prevent a user blocking others' voice
         self.sock.setblocking(False)
 
