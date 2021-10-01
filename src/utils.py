@@ -6,6 +6,7 @@ def get_command():
     """ Get a command from the user. """
 
     key = keyboard.read_key()
+    keyboard.write("\x08")
 
     if key == "n":
         return "new connection"
