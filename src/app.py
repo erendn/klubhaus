@@ -89,14 +89,18 @@ class app:
     def print_commands(self):
         """ Print current commands. """
 
-        print()
+        WIDE = 30
+        print("\n╔═════╦" + "═" * (WIDE) + "╗")
         if self.state == "idle":
-            print("Press N to host a new connection")
-            print("Press C to connect to a host")
-        if self.state == "hosting" or self.state == "connected":
-            print("Press D to disconnect the connection")
-        print("Press Esc to exit")
-        print()
+            print("║  N  ║ Host a new connection        ║")
+            print("╠═════╬" + "═" * (WIDE) + "║")
+            print("║  C  ║ Connect to a host            ║")
+            print("╠═════╬" + "═" * (WIDE) + "║")
+        if self.state == "hosting" or self.state == "connected ║":
+            print("║  D  ║ Disconnect the connection    ║")
+            print("╠═════╬" + "═" * (WIDE) + "║")
+        print("║ Esc ║ Exit                         ║")
+        print("╚═════╩" + "═" * (WIDE) + "╝\n")
 
 
     def print_warning(self, msg=None):
