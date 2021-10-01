@@ -1,23 +1,30 @@
 import socket
 from time import sleep
 from threading import Thread
+import pyaudio
 from .utils import *
+
+# Default sound configs
+CHUNK = 1024
+FORMAT = pyaudio.paInt16
+CHANNELS = 2
+RATE = 44100
 
 
 class connection:
     """ Peer-to-peer connection class. """
 
-    def __init__(self, username, port=0, is_host=False, connect_limit=2):
+    def __init__(self, username, host="localhost", port=0, is_host=False, connect_limit=2):
 
         self.username = username
 
         # Create a socket for connections
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if is_host:
-            self.sock.bind((HOST, port))
-            self.sock.listen(BACKLOG)
+            self.sock.bind((host, port))
+            self.sock.listen(1)
         else:
-            self.sock.connect((HOST, port))
+            self.sock.connect((host, port))
         # Set the socket non-blocking to prevent a user blocking others' voice
         self.sock.setblocking(False)
 
@@ -48,6 +55,7 @@ class connection:
         self.is_open = False
         for con in self.connections:
             con["socket"].close()
+        self.sock.close()
         self.input.close()
         self.output.close()
         self.pa.terminate()
