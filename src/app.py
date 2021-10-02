@@ -43,8 +43,9 @@ class app:
         if self.con:
             self.print_warning("You can only host 1 connection at the same time.")
         else:
+            username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = connection(username="host",
+            self.con = connection(username=username,
                                   port=port,
                                   is_host=True)
             self.state = "hosting"
@@ -56,8 +57,9 @@ class app:
         if self.con:
             self.print_warning("You can only connect to 1 host at the same time.")
         else:
+            username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = connection(username="client",
+            self.con = connection(username=username,
                                   port=port)
             self.state = "connected"
 
