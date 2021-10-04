@@ -65,7 +65,7 @@ def print_table(table, align=None):
         for j in range(num_cols):
             if align is None or align[j] == "left":
                 text = " " + table[i][j].ljust(col_width[j] - 1)
-            elif align is None or align[j] == "right":
+            elif align[j] == "right":
                 text = table[i][j].rjust(col_width[j] - 1) + " "
             elif align[j] == "center":
                 text = table[i][j].center(col_width[j])
