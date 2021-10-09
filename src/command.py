@@ -1,12 +1,12 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class command(Enum):
 
-    NEW_CONNECTION = auto()
-    CONNECT = auto()
-    DISCONNECT = auto()
-    EXIT = auto()
+    NEW_CONNECTION = "new connection"
+    CONNECT = "connect"
+    DISCONNECT = "disconnect"
+    EXIT = "exit"
 
 
     def __str__(self):

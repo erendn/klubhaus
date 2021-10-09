@@ -37,6 +37,9 @@ class app:
             elif com == command.EXIT:
                 self.exit()
                 break
+            else:
+                # TODO: Print warning message here
+                continue
 
 
     def new_connection(self):
@@ -107,6 +110,8 @@ class app:
 
     def print_warning(self, msg=None):
         """ Print a warning on the console. """
+
+        # TODO: Print multiple warning messages
 
         if msg:
             self.warning_msg = msg
