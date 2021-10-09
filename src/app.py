@@ -1,4 +1,4 @@
-from .connection import connection
+from .chatroom import chatroom
 from .command import command
 from .state import state
 from src.utils import *
@@ -28,8 +28,8 @@ class app:
             self.print_ui()
 
             com = get_command()
-            if com == command.NEW_CONNECTION:
-                self.new_connection()
+            if com == command.NEW_CHATROOM:
+                self.new_chat_room()
             elif com == command.CONNECT:
                 self.connect()
             elif com == command.DISCONNECT:
@@ -42,35 +42,35 @@ class app:
                 continue
 
 
-    def new_connection(self):
-        """ Host a new connection. """
+    def new_chat_room(self):
+        """ Host a new chat room. """
 
         if self.con:
-            self.print_warning("You can only host 1 connection at the same time.")
+            self.print_warning("You can only host 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = connection(username=username,
-                                  port=port,
-                                  is_host=True)
+            self.con = chatroom(username=username,
+                                port=port,
+                                is_host=True)
             self.state = state.HOSTING
 
 
     def connect(self):
-        """ Connect to a host. """
+        """ Connect to a chat room. """
 
         if self.con:
-            self.print_warning("You can only connect to 1 host at the same time.")
+            self.print_warning("You can only connect to 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = connection(username=username,
-                                  port=port)
+            self.con = chatroom(username=username,
+                                port=port)
             self.state = state.CONNECTED
 
 
     def disconnect(self):
-        """ Disconnect the connection. """
+        """ Disconnect from the chatroom. """
 
         if self.con:
             del self.con
@@ -99,11 +99,11 @@ class app:
         table = []
         if self.state == state.IDLE:
             table.extend([
-                ["new connection", "Host a new connection"],
+                ["new chatroom", "Host a new chatroom"],
                 ["connect", "Connect to a host"]
             ])
         if self.state == state.HOSTING or self.state == state.CONNECTED:
-            table.append(["disconnect", "Disconnect from the connection"])
+            table.append(["disconnect", "Disconnect from the chatroom"])
         table.append(["exit", "Exit"])
         print_table(table)
 

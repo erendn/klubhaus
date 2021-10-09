@@ -11,8 +11,8 @@ CHANNELS = 2
 RATE = 44100
 
 
-class connection:
-    """ Peer-to-peer connection class. """
+class chatroom:
+    """ Peer-to-peer chatroom class. """
 
     def __init__(self, username, host="localhost", port=0, is_host=False, connect_limit=2):
 

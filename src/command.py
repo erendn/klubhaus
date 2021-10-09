@@ -3,7 +3,7 @@ from enum import Enum
 
 class command(Enum):
 
-    NEW_CONNECTION = "new connection"
+    NEW_CHATROOM = "new chatroom"
     CONNECT = "connect"
     DISCONNECT = "disconnect"
     EXIT = "exit"
