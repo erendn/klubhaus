@@ -1,4 +1,6 @@
 from .connection import connection
+from .command import command
+from .state import state
 from src.utils import *
 
 
@@ -9,7 +11,7 @@ class app:
 
         # Program variables
         self.con = None
-        self.state = "idle"
+        self.state = state.IDLE
 
         # Default socket configs
         self.host = "localhost"
@@ -25,14 +27,14 @@ class app:
         while True:
             self.print_ui()
 
-            command = get_command()
-            if command == "new connection":
+            com = get_command()
+            if com == command.NEW_CONNECTION:
                 self.new_connection()
-            elif command == "connect":
+            elif com == command.CONNECT:
                 self.connect()
-            elif command == "disconnect":
+            elif com == command.DISCONNECT:
                 self.disconnect()
-            elif command == "exit":
+            elif com == command.EXIT:
                 self.exit()
                 break
 
@@ -48,7 +50,7 @@ class app:
             self.con = connection(username=username,
                                   port=port,
                                   is_host=True)
-            self.state = "hosting"
+            self.state = state.HOSTING
 
 
     def connect(self):
@@ -61,7 +63,7 @@ class app:
             port = get_input("Enter the port number: ")
             self.con = connection(username=username,
                                   port=port)
-            self.state = "connected"
+            self.state = state.CONNECTED
 
 
     def disconnect(self):
@@ -70,7 +72,7 @@ class app:
         if self.con:
             del self.con
             self.con = None
-        self.state = "idle"
+        self.state = state.IDLE
 
 
     def exit(self):
@@ -92,12 +94,12 @@ class app:
         """ Print current commands. """
 
         table = []
-        if self.state == "idle":
+        if self.state == state.IDLE:
             table.extend([
                 ["N", "Host a new connection"],
                 ["C", "Connect to a host"]
             ])
-        if self.state == "hosting" or self.state == "connected":
+        if self.state == state.HOSTING or self.state == state.CONNECTED:
             table.append(["D", "Disconnect from the connection"])
         table.append(["Esc", "Exit"])
         print_table(table, ["center", "left"])

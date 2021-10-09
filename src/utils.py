@@ -1,21 +1,23 @@
 import os
 import keyboard
+from .command import command
 
 
 def get_command():
     """ Get a command from the user. """
 
     key = keyboard.read_key()
-    keyboard.write("\x08")
+    # TODO: Erase from stdin only when needed
+    keyboard.write("\x08") # Erase from stdin
 
     if key == "n":
-        return "new connection"
+        return command.NEW_CONNECTION
     elif key == "c":
-        return "connect"
+        return command.CONNECT
     elif key == "d":
-        return "disconnect"
+        return command.DISCONNECT
     elif key == "esc":
-        return "exit"
+        return command.EXIT
 
 
 def get_input( msg):
