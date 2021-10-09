@@ -99,13 +99,13 @@ class app:
         table = []
         if self.state == state.IDLE:
             table.extend([
-                ["N", "Host a new connection"],
-                ["C", "Connect to a host"]
+                ["new connection", "Host a new connection"],
+                ["connect", "Connect to a host"]
             ])
         if self.state == state.HOSTING or self.state == state.CONNECTED:
-            table.append(["D", "Disconnect from the connection"])
-        table.append(["Esc", "Exit"])
-        print_table(table, ["center", "left"])
+            table.append(["disconnect", "Disconnect from the connection"])
+        table.append(["exit", "Exit"])
+        print_table(table)
 
 
     def print_warning(self, msg=None):
