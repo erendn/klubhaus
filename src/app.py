@@ -49,10 +49,14 @@ class app:
             self.print_warning("You can only host 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
-            port = get_input("Enter the port number: ")
             self.room = chatroom(username=username,
-                                 port=port,
                                  is_host=True)
+            print("This program is listening to:")
+            print(f"Host: {self.room.host}")
+            print(f"Port: {self.room.port}")
+            self.room.tunnel_host = get_input("Enter your NAT tunnel host: ")
+            self.room.tunnel_port = get_input("Enter your NAT tunnel port: ")
+            self.room.start_room()
             self.state = state.HOSTING
 
 
@@ -63,9 +67,13 @@ class app:
             self.print_warning("You can only connect to 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
-            port = get_input("Enter the port number: ")
-            self.room = chatroom(username=username,
-                                 port=port)
+            self.room = chatroom(username=username)
+            print("This program is listening to:")
+            print(f"Host: {self.room.host}")
+            print(f"Port: {self.room.port}")
+            self.room.tunnel_host = get_input("Enter your NAT tunnel host: ")
+            self.room.tunnel_port = get_input("Enter your NAT tunnel port: ")
+            self.room.start_room()
             self.state = state.CONNECTED
 
 
@@ -89,8 +97,18 @@ class app:
 
         clear_screen()
         print_banner()
+        self.print_info()
         self.print_commands()
         self.print_warning()
+
+
+    def print_info(self):
+        """"""
+
+        if self.room:
+            print("This program is listening to:")
+            print(f"Host: {self.room.host}")
+            print(f"Port: {self.room.port}")
 
 
     def print_commands(self):

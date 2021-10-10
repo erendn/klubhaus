@@ -14,14 +14,18 @@ RATE = 44100
 class chatroom:
     """ Peer-to-peer chatroom class. """
 
-    def __init__(self, username, host="localhost", port=0, is_host=False, connect_limit=2):
+    def __init__(self, username, host="", port=0, is_host=False, connect_limit=2):
 
         self.username = username
+        self.tunnel_host = None
+        self.tunnel_port = None
 
         # Create a socket for connections
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if is_host:
             self.sock.bind((host, port))
+            self.host = self.sock.getsockname()[0]
+            self.port = self.sock.getsockname()[1]
             self.sock.listen(1)
         else:
             self.sock.connect((host, port))
@@ -38,17 +42,6 @@ class chatroom:
         self.is_open = True
         self.connect_limit = connect_limit
 
-        self.setup_sound()
-
-        # Run the threads
-        if is_host:
-            con_thread = Thread(target=self.accept_connections, daemon=True)
-            con_thread.start()
-        in_thread = Thread(target=self.send_sound, daemon=True)
-        in_thread.start()
-        out_thread = Thread(target=self.receive_sound, daemon=True)
-        out_thread.start()
-
 
     def __del__(self):
 
@@ -59,6 +52,20 @@ class chatroom:
         self.input.close()
         self.output.close()
         self.pa.terminate()
+
+
+    def start_room(self):
+        """"""
+
+        self.setup_sound()
+        # Run the threads
+        if self.is_host:
+            con_thread = Thread(target=self.accept_connections, daemon=True)
+            con_thread.start()
+        in_thread = Thread(target=self.send_sound, daemon=True)
+        in_thread.start()
+        out_thread = Thread(target=self.receive_sound, daemon=True)
+        out_thread.start()
 
 
     def connect(self):
