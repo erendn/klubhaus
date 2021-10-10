@@ -10,7 +10,7 @@ class app:
     def __init__(self):
 
         # Program variables
-        self.con = None
+        self.room = None
         self.state = state.IDLE
 
         # Default socket configs
@@ -45,36 +45,36 @@ class app:
     def new_chat_room(self):
         """ Host a new chat room. """
 
-        if self.con:
+        if self.room:
             self.print_warning("You can only host 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = chatroom(username=username,
-                                port=port,
-                                is_host=True)
+            self.room = chatroom(username=username,
+                                 port=port,
+                                 is_host=True)
             self.state = state.HOSTING
 
 
     def connect(self):
         """ Connect to a chat room. """
 
-        if self.con:
+        if self.room:
             self.print_warning("You can only connect to 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
             port = get_input("Enter the port number: ")
-            self.con = chatroom(username=username,
-                                port=port)
+            self.room = chatroom(username=username,
+                                 port=port)
             self.state = state.CONNECTED
 
 
     def disconnect(self):
         """ Disconnect from the chatroom. """
 
-        if self.con:
-            del self.con
-            self.con = None
+        if self.room:
+            del self.room
+            self.room = None
         self.state = state.IDLE
 
 
