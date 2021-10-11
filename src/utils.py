@@ -11,7 +11,7 @@ def get_command():
             return v
 
 
-def get_input( msg):
+def get_input(msg):
     """ Return a user input. """
 
     # TODO: Make it fancy looking
@@ -24,7 +24,7 @@ def get_input( msg):
 def clear_screen():
     """ Clear the terminal/console. """
 
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def print_banner():
