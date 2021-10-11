@@ -49,13 +49,13 @@ class app:
             self.print_warning("You can only host 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
-            self.room = chatroom(username=username,
-                                 is_host=True)
+            self.room = chatroom(username=username)
             print("This program is listening to:")
-            print(f"Host: {self.room.host}")
-            print(f"Port: {self.room.port}")
-            self.room.tunnel_host = get_input("Enter your NAT tunnel host: ")
-            self.room.tunnel_port = get_input("Enter your NAT tunnel port: ")
+            print(f"Host: {self.room.sock.address[0]}")
+            print(f"Port: {self.room.sock.address[1]}")
+            host = get_input("Enter your NAT tunnel host: ")
+            port = get_input("Enter your NAT tunnel port: ")
+            self.room.tunnel_address = (host, port)
             self.room.start_room()
             self.state = state.HOSTING
 
@@ -69,10 +69,14 @@ class app:
             username = get_input("Enter username: ")
             self.room = chatroom(username=username)
             print("This program is listening to:")
-            print(f"Host: {self.room.host}")
-            print(f"Port: {self.room.port}")
-            self.room.tunnel_host = get_input("Enter your NAT tunnel host: ")
-            self.room.tunnel_port = get_input("Enter your NAT tunnel port: ")
+            print(f"Host: {self.room.sock.address[0]}")
+            print(f"Port: {self.room.sock.address[1]}")
+            host = get_input("Enter your NAT tunnel host: ")
+            port = get_input("Enter your NAT tunnel port: ")
+            self.room.tunnel_address = (host, port)
+            host = get_input("Enter host to connect: ")
+            port = get_input("Enter port to connect: ")
+            self.room.connect(host, port)
             self.room.start_room()
             self.state = state.CONNECTED
 
@@ -107,8 +111,8 @@ class app:
 
         if self.room:
             print("This program is listening to:")
-            print(f"Host: {self.room.host}")
-            print(f"Port: {self.room.port}")
+            print(f"Host: {self.room.sock.address[0]}")
+            print(f"Port: {self.room.sock.address[1]}")
 
 
     def print_commands(self):

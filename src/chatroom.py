@@ -1,7 +1,8 @@
-import socket
 from time import sleep
 from threading import Thread
 import pyaudio
+from .protocol import protocol
+from .server_socket import server_socket
 from .utils import *
 
 # Default sound configs
@@ -14,44 +15,37 @@ RATE = 44100
 class chatroom:
     """ Peer-to-peer chatroom class. """
 
-    def __init__(self, username, host="", port=0, is_host=False, connect_limit=2):
+    def __init__(self, username, host="", port=0, room_size=2):
 
         self.username = username
-        self.tunnel_host = None
-        self.tunnel_port = None
+        self.tunnel_address = None
 
-        # Create a socket for connections
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if is_host:
-            self.sock.bind((host, port))
-            self.host = self.sock.getsockname()[0]
-            self.port = self.sock.getsockname()[1]
-            self.sock.listen(1)
-        else:
-            self.sock.connect((host, port))
-        # Set the socket non-blocking to prevent a user blocking others' voice
-        self.sock.setblocking(False)
+        # Create a server_socket to accept new connections to the chatroom
+        self.sock = server_socket(host, port)
 
         self.connections = []
-        if not is_host:
-            self.connections.append({
-                "socket": self.sock,
-                "username": None,
-            })
-        self.is_host = is_host
+        self.room_size = room_size
         self.is_open = True
-        self.connect_limit = connect_limit
 
 
     def __del__(self):
 
         self.is_open = False
         for con in self.connections:
-            con["socket"].close()
+            con.close()
         self.sock.close()
         self.input.close()
         self.output.close()
         self.pa.terminate()
+
+
+    def connect(self, host, port):
+        """"""
+
+        prot = protocol()
+        prot.connect(host, port)
+        prot.establish(self.username, self.tunnel_address)
+        self.connections.append(prot)
 
 
     def start_room(self):
@@ -59,33 +53,12 @@ class chatroom:
 
         self.setup_sound()
         # Run the threads
-        if self.is_host:
-            con_thread = Thread(target=self.accept_connections, daemon=True)
-            con_thread.start()
+        con_thread = Thread(target=self.accept_connections, daemon=True)
+        con_thread.start()
         in_thread = Thread(target=self.send_sound, daemon=True)
         in_thread.start()
         out_thread = Thread(target=self.receive_sound, daemon=True)
         out_thread.start()
-
-
-    def connect(self):
-        """ Connect a new user to the call. """
-
-        sock, _ = self.sock.accept()
-        self.connections.append({
-            "socket": sock,
-            "username": None,
-        })
-
-
-    def disconnect(self, username):
-        """ Disconnect a user from the call. """
-
-        for con in self.connections:
-            if con["username"] == username:
-                con["socket"].close()
-                self.connections.remove(con)
-                break
 
 
     def accept_connections(self):
@@ -95,12 +68,12 @@ class chatroom:
         """
 
         while self.is_open:
-            if len(self.connections) < self.connect_limit:
-                try:
-                    self.connect()
-                except BlockingIOError:
-                    sleep(1)
-                    continue
+            if len(self.connections) < self.room_size - 1:
+                prot = self.sock.accept(self.username, self.tunnel_address, self.connections)
+                if prot:
+                    self.connections.append(prot)
+                else:
+                    sleep(1) # Don't overwhelm the CPU
 
 
     def setup_sound(self):
@@ -141,10 +114,7 @@ class chatroom:
         while self.is_open:
             frame = self.sound_input()
             for con in self.connections:
-                try:
-                    con["socket"].sendall(frame)
-                except socket.error:
-                    continue
+                con.send(frame)
 
 
     def receive_sound(self):
@@ -155,8 +125,6 @@ class chatroom:
 
         while self.is_open:
             for con in self.connections:
-                try:
-                    frame = con["socket"].recv(CHUNK)
+                frame = con.recv()
+                if frame:
                     self.sound_output(frame)
-                except socket.error:
-                    continue
