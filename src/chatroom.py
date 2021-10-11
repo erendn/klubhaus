@@ -40,7 +40,7 @@ class chatroom:
 
 
     def connect(self, host, port):
-        """"""
+        """ Connect to a chatroom through a user. """
 
         prot = protocol()
         prot.connect(host, port)
@@ -49,7 +49,7 @@ class chatroom:
 
 
     def start_room(self):
-        """"""
+        """ Start the chatroom. """
 
         self.setup_sound()
         # Run the threads

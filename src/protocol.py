@@ -3,6 +3,7 @@ import socket
 
 
 class protocol:
+    """ Protocol class to establish chatroom connections between clients. """
 
     def __init__(self, sock=None, is_host=False):
 
@@ -17,13 +18,13 @@ class protocol:
 
 
     def connect(self, host, port):
-        """"""
+        """ Connect to a chatroom server socket. """
 
         self.sock.connect((host, port))
 
 
     def establish(self, username, address, user_addresses=None):
-        """"""
+        """ Establish the protocol by exchanging information about chatroom users. """
 
         user_addresses = None
         if not self.ready:
@@ -40,13 +41,13 @@ class protocol:
 
 
     def close(self):
-        """"""
+        """ Close the protocol's socket. """
 
         self.sock.close()
 
 
     def send_setup_info(self, username, address, user_addresses=None):
-        """"""
+        """ Send setup information for the protocol. """
 
         data = {
             "username": username,
@@ -60,7 +61,7 @@ class protocol:
 
 
     def recv_setup_info(self):
-        """"""
+        """ Receive setup information for the protocol. """
 
         from .chatroom import CHUNK
         data = self.sock.recv(CHUNK)
@@ -75,7 +76,7 @@ class protocol:
 
 
     def send(self, data):
-        """"""
+        """ Send data through sockets. """
 
         if self.ready:
             try:
@@ -85,7 +86,7 @@ class protocol:
 
 
     def recv(self):
-        """"""
+        """ Receive data through sockets. """
 
         if self.ready:
             try:

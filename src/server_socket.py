@@ -3,7 +3,7 @@ from .protocol import protocol
 
 
 class server_socket:
-    """"""
+    """ Server socket class to accept new users to chatrooms. """
 
     def __init__(self, host, port, backlog=1):
 
@@ -15,7 +15,7 @@ class server_socket:
 
 
     def accept(self, username, address, user_addresses=None):
-        """"""
+        """ Accept a new user to the chatroom via protocol. """
 
         try:
             sock, _ = self.sock.accept()
@@ -27,6 +27,6 @@ class server_socket:
 
 
     def close(self):
-        """"""
+        """ Close the server socket. """
 
         self.sock.close()
