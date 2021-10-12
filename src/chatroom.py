@@ -28,17 +28,6 @@ class chatroom:
         self.is_open = True
 
 
-    def __del__(self):
-
-        self.is_open = False
-        for con in self.connections:
-            con.close()
-        self.sock.close()
-        self.input.close()
-        self.output.close()
-        self.pa.terminate()
-
-
     def connect(self, host, port):
         """ Connect to a chatroom through a user. """
 
@@ -59,6 +48,17 @@ class chatroom:
         in_thread.start()
         out_thread = Thread(target=self.receive_sound, daemon=True)
         out_thread.start()
+
+
+    def stop_room(self):
+
+        self.is_open = False
+        for con in self.connections:
+            con.close()
+        self.sock.close()
+        self.input.close()
+        self.output.close()
+        self.pa.terminate()
 
 
     def accept_connections(self):

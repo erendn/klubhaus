@@ -67,7 +67,7 @@ class app:
         """ Disconnect from the chatroom. """
 
         if self.room:
-            del self.room
+            self.room.stop_room()
             self.room = None
         self.state = state.IDLE
 
