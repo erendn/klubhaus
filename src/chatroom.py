@@ -9,7 +9,7 @@ from .utils import *
 class chatroom:
     """ Peer-to-peer chatroom class. """
 
-    def __init__(self, username, host="", port=0, room_size=2):
+    def __init__(self, username, host="localhost", port=0, room_size=2):
 
         self.username = username
         self.tunnel_address = None
@@ -66,8 +66,7 @@ class chatroom:
                 prot = self.sock.accept(self.username, self.tunnel_address, self.connections)
                 if prot:
                     self.connections.append(prot)
-                else:
-                    sleep(1) # Don't overwhelm the CPU
+            sleep(1) # Don't overwhelm the CPU
 
 
     def setup_sound(self):
