@@ -92,9 +92,14 @@ class app:
         """"""
 
         if self.room:
-            print("This program is listening to:")
-            print(f"Host: {self.room.sock.address[0]}")
-            print(f"Port: {self.room.sock.address[1]}")
+            text = "This program is listening to:\n" + \
+                f"Host: {self.room.sock.address[0]}\n" + \
+                f"Port: {self.room.sock.address[1]}"
+            print_box(text)
+            text = "Your NAT tunnel is:\n" + \
+                f"Host: {self.room.tunnel_address[0]}\n" + \
+                f"Port: {self.room.tunnel_address[1]}"
+            print_box(text)
 
 
     def print_commands(self):
@@ -120,11 +125,7 @@ class app:
             self.warning_msg = msg
 
         if self.warning_msg:
-            print()
-            print("╔" + "═" * (len(self.warning_msg) + 4) + "╗")
-            print("║  " + self.warning_msg + "  ║")
-            print("╚" + "═" * (len(self.warning_msg) + 4) + "╝")
-            print()
+            print_box(self.warning_msg)
 
         if msg is None:
             self.warning_msg = None

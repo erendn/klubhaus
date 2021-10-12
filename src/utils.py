@@ -101,3 +101,24 @@ def print_table_line(col_width, place):
     elif place == "bottom":
         line += "╝"
     print(line)
+
+
+def print_box(msg, align="left"):
+    """ Print a box of text. """
+
+    lines = msg.splitlines()
+    max_width = 0
+    for line in lines:
+        if len(line) + 2 > max_width:
+            max_width = len(line) + 2
+
+    print_table_line([max_width], "top")
+    for line in lines:
+        if align == "left":
+            text = " " + line.ljust(max_width - 1)
+        elif align == "right":
+            text = line.rjust(max_width - 1) + " "
+        elif align == "center":
+            text = line.center(max_width)
+        print("║" + text + "║")
+    print_table_line([max_width], "bottom")
