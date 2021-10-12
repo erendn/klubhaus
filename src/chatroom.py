@@ -5,12 +5,6 @@ from .protocol import protocol
 from .server_socket import server_socket
 from .utils import *
 
-# Default sound configs
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 2
-RATE = 44100
-
 
 class chatroom:
     """ Peer-to-peer chatroom class. """

@@ -1,5 +1,6 @@
 import json
 import socket
+from .utils import *
 
 
 class protocol:
@@ -63,7 +64,6 @@ class protocol:
     def recv_setup_info(self):
         """ Receive setup information for the protocol. """
 
-        from .chatroom import CHUNK
         data = self.sock.recv(CHUNK)
         data = json.loads(data)
         self.username = data["username"]
@@ -90,7 +90,6 @@ class protocol:
 
         if self.ready:
             try:
-                from .chatroom import CHUNK
                 return self.sock.recv(CHUNK)
             except socket.error:
                 return
