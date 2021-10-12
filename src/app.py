@@ -12,12 +12,6 @@ class app:
         # Program variables
         self.room = None
         self.state = state.IDLE
-
-        # Default socket configs
-        self.host = "localhost"
-        self.port = 5000
-        self.backlog = 5
-
         self.warning_msg = None
 
 
@@ -134,7 +128,6 @@ class app:
         """ Print a warning on the console. """
 
         # TODO: Print multiple warning messages
-
         if msg:
             self.warning_msg = msg
 
