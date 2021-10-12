@@ -43,13 +43,7 @@ class app:
             self.print_warning("You can only host 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
-            self.room = chatroom(username=username)
-            print("This program is listening to:")
-            print(f"Host: {self.room.sock.address[0]}")
-            print(f"Port: {self.room.sock.address[1]}")
-            host = get_input("Enter your NAT tunnel host: ")
-            port = get_input("Enter your NAT tunnel port: ")
-            self.room.tunnel_address = (host, port)
+            self.room = chatroom(username)
             self.room.start_room()
             self.state = state.HOSTING
 
@@ -61,13 +55,7 @@ class app:
             self.print_warning("You can only connect to 1 chat room at the same time.")
         else:
             username = get_input("Enter username: ")
-            self.room = chatroom(username=username)
-            print("This program is listening to:")
-            print(f"Host: {self.room.sock.address[0]}")
-            print(f"Port: {self.room.sock.address[1]}")
-            host = get_input("Enter your NAT tunnel host: ")
-            port = get_input("Enter your NAT tunnel port: ")
-            self.room.tunnel_address = (host, port)
+            self.room = chatroom(username)
             host = get_input("Enter host to connect: ")
             port = get_input("Enter port to connect: ")
             self.room.connect(host, port)

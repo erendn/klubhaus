@@ -12,10 +12,16 @@ class chatroom:
     def __init__(self, username, host="localhost", port=0, room_size=2):
 
         self.username = username
-        self.tunnel_address = None
 
         # Create a server_socket to accept new connections to the chatroom
         self.sock = server_socket(host, port)
+
+        print("This program is listening to:")
+        print(f"Host: {self.sock.address[0]}")
+        print(f"Port: {self.sock.address[1]}")
+        host = get_input("Enter your NAT tunnel host: ")
+        port = get_input("Enter your NAT tunnel port: ")
+        self.tunnel_address = (host, port)
 
         self.connections = []
         self.room_size = room_size
