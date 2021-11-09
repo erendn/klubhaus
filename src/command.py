@@ -6,6 +6,7 @@ class command(Enum):
     NEW_CHATROOM = "new chatroom"
     CONNECT = "connect"
     DISCONNECT = "disconnect"
+    SETTINGS = "settings"
     EXIT = "exit"
 
 

@@ -1,6 +1,7 @@
 import socket
 from pyngrok import ngrok
 from .protocol import protocol
+from .settings import SETTINGS
 
 
 class server_socket:
@@ -38,7 +39,11 @@ class server_socket:
     def start_ssh_tunnel(self):
         """ Start the SSH tunnel via ngrok. """
 
-        self.tunnel = ngrok.connect(self.address[1], "tcp", options={"region":"eu"})
+        self.tunnel = ngrok.connect(
+            addr=self.address[1],
+            proto="tcp",
+            options={"region": SETTINGS.tunnel_region}
+        )
         url = self.tunnel.public_url.split("//")[1]
         self.public_address = tuple(url.split(":"))
 

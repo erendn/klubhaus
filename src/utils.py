@@ -28,6 +28,16 @@ def get_input(msg):
     return data
 
 
+def print_audio_devices():
+    """ Print all audio devices. """
+
+    import pyaudio
+    p = pyaudio.PyAudio()
+    for i in range(p.get_device_count()):
+        dev = p.get_device_info_by_index(i)
+        print((i, dev['name'], dev['maxInputChannels']))
+
+
 def clear_screen():
     """ Clear the terminal/console. """
 
@@ -50,15 +60,27 @@ def print_banner():
 def print_table(table, align=None):
     """ Print the given table. """
 
+    if type(table) is dict:
+        table = list(map(list, table.items()))
+
+    if len(table) == 0:
+        return
+
     num_rows = len(table)
     num_cols = len(table[0])
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            if type(table[i][j]) is not str:
+                table[i][j] = str(table[i][j])
+
     # Calculate the widths of each column
     col_width = []
     for i in range(num_cols):
         col_width.append(0)
         for j in range(num_rows):
-            if col_width[-1] < len(table[j][i]) + 2:
-                col_width[-1] = len(table[j][i]) + 2
+            if col_width[-1] < len(str(table[j][i])) + 2:
+                col_width[-1] = len(str(table[j][i])) + 2
 
     print_table_line(col_width, "top")
     for i in range(num_rows):
