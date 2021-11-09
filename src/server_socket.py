@@ -42,7 +42,7 @@ class server_socket:
         self.tunnel = ngrok.connect(
             addr=self.address[1],
             proto="tcp",
-            options={"region": SETTINGS.tunnel_region}
+            options={"region": SETTINGS["tunnel_region"]}
         )
         url = self.tunnel.public_url.split("//")[1]
         self.public_address = tuple(url.split(":"))

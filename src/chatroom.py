@@ -4,6 +4,7 @@ import pyaudio
 from .protocol import protocol
 from .server_socket import server_socket
 from .utils import *
+from .settings import SETTINGS
 
 
 class chatroom:
@@ -78,12 +79,14 @@ class chatroom:
                                   channels=CHANNELS,
                                   rate=RATE,
                                   input=True,
+                                  input_device_index=SETTINGS["audio_in_index"],
                                   frames_per_buffer=CHUNK)
         # Sound output
         self.output = self.pa.open(format=FORMAT,
                                    channels=CHANNELS,
                                    rate=RATE,
-                                   output=True)
+                                   output=True,
+                                   output_device_index=SETTINGS["audio_out_index"])
 
 
     def sound_input(self):
