@@ -16,13 +16,7 @@ class chatroom:
         # Create a server_socket to accept new connections to the chatroom
         self.sock = server_socket(host, port)
 
-        print("This program is listening to:")
-        print(f"Host: {self.sock.address[0]}")
-        print(f"Port: {self.sock.address[1]}")
-        host = get_input("Enter your NAT tunnel host: ")
-        port = get_input("Enter your NAT tunnel port: ")
-        self.tunnel_address = (host, port)
-
+        # Store all connections in this list
         self.connections = []
         self.room_size = room_size
         self.is_open = True
@@ -33,7 +27,7 @@ class chatroom:
 
         prot = protocol()
         prot.connect(host, port)
-        prot.establish(self.username, self.tunnel_address)
+        prot.establish(self.username, self.sock.public_address)
         self.connections.append(prot)
 
 
@@ -69,7 +63,7 @@ class chatroom:
 
         while self.is_open:
             if len(self.connections) < self.room_size - 1:
-                prot = self.sock.accept(self.username, self.tunnel_address, self.connections)
+                prot = self.sock.accept(self.username, self.sock.public_address, self.connections)
                 if prot:
                     self.connections.append(prot)
             sleep(1) # Don't overwhelm the CPU

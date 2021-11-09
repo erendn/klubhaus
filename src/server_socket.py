@@ -1,4 +1,5 @@
 import socket
+from pyngrok import ngrok
 from .protocol import protocol
 
 
@@ -12,6 +13,7 @@ class server_socket:
         self.address = self.sock.getsockname()
         self.sock.listen(backlog)
         self.sock.setblocking(False)
+        self.start_ssh_tunnel()
 
 
     def accept(self, username, address, user_addresses=None):
@@ -29,4 +31,19 @@ class server_socket:
     def close(self):
         """ Close the server socket. """
 
+        self.close_ssh_tunnel()
         self.sock.close()
+
+
+    def start_ssh_tunnel(self):
+        """ Start the SSH tunnel via ngrok. """
+
+        self.tunnel = ngrok.connect(self.address[1], "tcp", options={"region":"eu"})
+        url = self.tunnel.public_url.split("//")[1]
+        self.public_address = tuple(url.split(":"))
+
+
+    def close_ssh_tunnel(self):
+        """ Close the SSH tunnel of ngrok. """
+
+        ngrok.disconnect(self.tunnel.public_url)
