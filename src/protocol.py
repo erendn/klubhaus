@@ -24,21 +24,20 @@ class protocol:
         self.sock.connect((host, port))
 
 
-    def establish(self, username, address, user_addresses=None):
+    def establish(self, username, address, other_prots=None):
         """ Establish the protocol by exchanging information about chatroom users. """
 
-        user_addresses = None
         if not self.ready:
             # If this isn't host, send setup info first
             if not self.is_host:
                 self.send_setup_info(username, address)
-                user_addresses = self.recv_setup_info()
+                other_prots = self.recv_setup_info()
             else:
                 self.recv_setup_info()
-                self.send_setup_info(username, address, user_addresses)
+                self.send_setup_info(username, address, other_prots)
             self.sock.setblocking(False)
             self.ready = True
-        return user_addresses
+            return other_prots
 
 
     def close(self):
@@ -47,16 +46,16 @@ class protocol:
         self.sock.close()
 
 
-    def send_setup_info(self, username, address, user_addresses=None):
+    def send_setup_info(self, username, address, other_prots=None):
         """ Send setup information for the protocol. """
 
         data = {
             "username": username,
             "address": address,
         }
-        if user_addresses:
-            data["hosts"] = [x[0] for x in user_addresses]
-            data["ports"] = [x[1] for x in user_addresses]
+        if other_prots:
+            data["hosts"] = [x.address[0] for x in other_prots]
+            data["ports"] = [x.address[1] for x in other_prots]
         data = json.dumps(data).encode("utf-8")
         self.sock.sendall(data)
 

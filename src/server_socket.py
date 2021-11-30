@@ -17,13 +17,13 @@ class server_socket:
         self.start_ssh_tunnel()
 
 
-    def accept(self, username, address, user_addresses=None):
+    def accept(self, username, address, other_prots=None):
         """ Accept a new user to the chatroom via protocol. """
 
         try:
             sock, _ = self.sock.accept()
             prot = protocol(sock, True)
-            prot.establish(username, address, user_addresses)
+            prot.establish(username, address, other_prots)
             return prot
         except socket.error:
             return

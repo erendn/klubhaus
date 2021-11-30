@@ -10,7 +10,7 @@ from .settings import SETTINGS
 class chatroom:
     """ Peer-to-peer chatroom class. """
 
-    def __init__(self, username, host="localhost", port=0, room_size=2):
+    def __init__(self, username, host="localhost", port=0, room_size=5):
 
         self.username = username
 
@@ -23,13 +23,17 @@ class chatroom:
         self.is_open = True
 
 
-    def connect(self, host, port):
+    def connect(self, host, port, is_first=True):
         """ Connect to a chatroom through a user. """
 
         prot = protocol()
         prot.connect(host, port)
-        prot.establish(self.username, self.sock.public_address)
+        other_addrs = prot.establish(self.username, self.sock.public_address)
         self.connections.append(prot)
+        # Don't try to connect to every client in each recursion
+        if is_first:
+            for addr in other_addrs:
+                self.connect(addr[0], addr[1], False)
 
 
     def start_room(self):
