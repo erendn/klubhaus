@@ -17,7 +17,7 @@ class server_socket:
         self.start_ssh_tunnel()
 
 
-    def accept(self, username, address, other_prots=None):
+    def accept(self, username, address, other_prots):
         """ Accept a new user to the chatroom via protocol. """
 
         try:

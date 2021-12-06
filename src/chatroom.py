@@ -28,7 +28,7 @@ class chatroom:
 
         prot = protocol()
         prot.connect(host, port)
-        other_addrs = prot.establish(self.username, self.sock.public_address)
+        other_addrs = prot.establish(self.username, self.sock.public_address, [])
         self.connections.append(prot)
         # Don't try to connect to every client in each recursion
         if is_first:
