@@ -70,7 +70,7 @@ class protocol:
         if "hosts" in data.keys():
             user_addresses = []
             for i in range(len(data["hosts"])):
-                user_addresses.append((data["hosts"][i], data["ports"][i]))
+                user_addresses.append((data["hosts"][i], int(data["ports"][i])))
             return user_addresses
         print(data)
 
