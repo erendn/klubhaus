@@ -30,6 +30,7 @@ class chatroom:
         prot.connect(host, port)
         other_addrs = prot.establish(self.username, self.sock.public_address, [])
         self.connections.append(prot)
+        self.start_receive_thread(prot)
         # Don't try to connect to every client in each recursion
         if is_first:
             for addr in other_addrs:
@@ -39,14 +40,10 @@ class chatroom:
     def start_room(self):
         """ Start the chatroom. """
 
-        self.setup_sound()
-        # Run the threads
+        self.pa = pyaudio.PyAudio()
         con_thread = Thread(target=self.accept_connections, daemon=True)
         con_thread.start()
-        in_thread = Thread(target=self.send_sound, daemon=True)
-        in_thread.start()
-        out_thread = Thread(target=self.receive_sound, daemon=True)
-        out_thread.start()
+        self.start_broadcast_thread()
 
 
     def stop_room(self):
@@ -55,8 +52,7 @@ class chatroom:
         for con in self.connections:
             con.close()
         self.sock.close()
-        self.input.close()
-        self.output.close()
+        sleep(1)
         self.pa.terminate()
 
 
@@ -71,38 +67,22 @@ class chatroom:
                 prot = self.sock.accept(self.username, self.sock.public_address, self.connections)
                 if prot:
                     self.connections.append(prot)
+                    self.start_receive_thread(prot)
             sleep(1) # Don't overwhelm the CPU
 
 
-    def setup_sound(self):
-        """ Setup sound input and output streams. """
+    def start_broadcast_thread(self):
+        """"""
 
-        self.pa = pyaudio.PyAudio()
-        # Sound input
-        self.input = self.pa.open(format=FORMAT,
-                                  channels=CHANNELS,
-                                  rate=RATE,
-                                  input=True,
-                                  input_device_index=SETTINGS["audio_in_index"],
-                                  frames_per_buffer=CHUNK)
-        # Sound output
-        self.output = self.pa.open(format=FORMAT,
-                                   channels=CHANNELS,
-                                   rate=RATE,
-                                   output=True,
-                                   output_device_index=SETTINGS["audio_out_index"])
+        thread = Thread(target=self.send_sound, daemon=True)
+        thread.start()
 
 
-    def sound_input(self):
-        """ Return a chunk of sound from the input stream. """
+    def start_receive_thread(self, prot):
+        """"""
 
-        return self.input.read(CHUNK)
-
-
-    def sound_output(self, frame):
-        """ Write a chunk of sound to the output stream. """
-
-        self.output.write(frame)
+        thread = Thread(target=self.receive_sound, args=(prot,), daemon=True)
+        thread.start()
 
 
     def send_sound(self):
@@ -111,20 +91,32 @@ class chatroom:
         This method should be run by a thread.
         """
 
+        stream = self.pa.open(format=FORMAT,
+                              channels=CHANNELS,
+                              rate=RATE,
+                              input=True,
+                              input_device_index=SETTINGS["audio_in_index"],
+                              frames_per_buffer=CHUNK)
         while self.is_open:
-            frame = self.sound_input()
+            frame = stream.read(CHUNK)
             for con in self.connections:
                 con.send(frame)
+        stream.close()
 
 
-    def receive_sound(self):
+    def receive_sound(self, prot):
         """
         Receive output stream from all connected users.
         This method should be run by a thread.
         """
 
+        stream = self.pa.open(format=FORMAT,
+                              channels=CHANNELS,
+                              rate=RATE,
+                              output=True,
+                              output_device_index=SETTINGS["audio_out_index"])
         while self.is_open:
-            for con in self.connections:
-                frame = con.recv()
-                if frame:
-                    self.sound_output(frame)
+            frame = prot.recv()
+            if frame:
+                stream.write(frame)
+        stream.close()
