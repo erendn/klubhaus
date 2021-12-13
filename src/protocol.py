@@ -57,7 +57,6 @@ class protocol:
         data["ports"] = [x.address[1] for x in other_prots]
         data = json.dumps(data).encode("utf-8")
         self.sock.sendall(data)
-        print(data)
 
 
     def recv_setup_info(self):
@@ -72,7 +71,6 @@ class protocol:
             for i in range(len(data["hosts"])):
                 user_addresses.append((data["hosts"][i], int(data["ports"][i])))
             return user_addresses
-        print(data)
 
 
     def send(self, data):

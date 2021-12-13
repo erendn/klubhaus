@@ -21,6 +21,7 @@ class chatroom:
         self.connections = []
         self.room_size = room_size
         self.is_open = True
+        self.pa = pyaudio.PyAudio()
 
 
     def connect(self, host, port, is_first=True):
@@ -40,10 +41,9 @@ class chatroom:
     def start_room(self):
         """ Start the chatroom. """
 
-        self.pa = pyaudio.PyAudio()
+        self.start_broadcast_thread()
         con_thread = Thread(target=self.accept_connections, daemon=True)
         con_thread.start()
-        self.start_broadcast_thread()
 
 
     def stop_room(self):
