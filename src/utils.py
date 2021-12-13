@@ -6,8 +6,7 @@ from .command import command
 CHUNK = 4096
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 44100
-
+RATE = 48000
 
 def get_command():
     """ Get a command from the user. """
